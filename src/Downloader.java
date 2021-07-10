@@ -24,8 +24,12 @@ public class Downloader implements Runnable{
     private JRadioButton Vm2;
     private JRadioButton Vm3;
     
-    public Downloader(JProgressBar cpu, JProgressBar memory, JProgressBar disk, JProgressBar network, Scanner scan) throws IOException{
-    	this.cpu = cpu;
+    public Downloader(JButton start, JButton stop, JButton disconnect, JButton connect, JProgressBar cpu, JProgressBar memory, JProgressBar disk, JProgressBar network, Scanner scan) throws IOException{
+    	this.start = start;
+    	this.stop = stop;
+    	this.disconnect = disconnect;
+        this.connect = connect;
+        this.cpu = cpu;
         this.memory = memory;
         this.disk = disk;
         this.network = network;
@@ -44,15 +48,17 @@ public class Downloader implements Runnable{
                 	this.start.setEnabled(true);
                 	this.disconnect.setEnabled(true);
                 	this.connect.setEnabled(false);
-                	String info[] = cmd.split(":");
-                	int CPU = Integer.parseInt(info[0]);
-                	int MEMORY = Integer.parseInt(info[1]);
-                	int DISK = Integer.parseInt(info[2]);
-                	int NETWORK = Integer.parseInt(info[3]);
-                	cpu.setValue(CPU);
-                	memory.setValue(MEMORY);
-                	disk.setValue(DISK);
-                	network.setValue(NETWORK);
+                	running = false;
+                }else{ //mod
+                    String info[] = cmd.split(":");
+                    int CPU = Integer.parseInt(info[0]);
+                    int MEMORY = Integer.parseInt(info[1]);
+                    int DISK = Integer.parseInt(info[2]);
+                    int NETWORK = Integer.parseInt(info[3]);
+                    cpu.setValue(CPU);
+                    memory.setValue(MEMORY);
+                    disk.setValue(DISK);
+                    network.setValue(NETWORK);
                 }
             }
         }

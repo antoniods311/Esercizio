@@ -25,8 +25,22 @@ public class Listener implements ActionListener{
     private Socket sock;
     private Frame frame;
 
-    public Listener(Frame frame, JProgressBar cpu, JProgressBar memory, JProgressBar disk, JProgressBar network, JTextField ip, JTextField porta) {
+    // bg
+    private ButtonGroup bg;
+
+    private JButton startBtn;
+    private JButton stopBtn;
+    private JButton connectBtn;
+    private JButton disconnectBtn;
+
+    public Listener(Frame frame, JButton startBtn, JButton stopBtn, JButton disconnectBtn, JButton connectBtn, JProgressBar cpu, JProgressBar memory, JProgressBar disk, JProgressBar network, JTextField ip, JTextField porta, ButtonGroup bg) {
         this.frame = frame;
+        this.startBtn = startBtn;
+        this.stopBtn = stopBtn;
+        this.disconnectBtn = disconnectBtn;
+        this.connectBtn = connectBtn;
+
+        this.bg = bg;
         this.cpu = cpu;
         this.memory = memory;
         this.disk = disk;
@@ -57,13 +71,14 @@ public class Listener implements ActionListener{
         }
         else if(cmd.equals(Listener.START)) {
             try {
-                downloader = new Downloader(cpu, memory, disk, network, scan);
+                downloader = new Downloader(startBtn, stopBtn, disconnectBtn, connectBtn,  cpu, memory, disk, network, scan);
             }catch(IOException e1) {
                 JOptionPane.showMessageDialog(null, "Impossiblie scaricare: \n" + e1.getMessage());
                 e1.printStackTrace();
             }
             transmitting = true;
-            netPw.println(cmd);
+            String selectedVM = bg.getSelection().getActionCommand();
+            netPw.println(cmd + ":" + selectedVM);
             netPw.flush();
             Thread t = new Thread(downloader);
             t.start();

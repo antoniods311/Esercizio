@@ -31,6 +31,8 @@ public class Frame extends JFrame{
     private JRadioButton Vm2;
     private JRadioButton Vm3;
 
+    private ButtonGroup bg;
+
     private JTextField ip;
     private JTextField porta;
 
@@ -43,7 +45,7 @@ public class Frame extends JFrame{
 
         setTitle("Capone Franco 1884168");
         ip = new JTextField(20);
-        ip.setText("192.168.56.1");
+        ip.setText("localhost");
         porta = new JTextField(20);
         porta.setText("4400");
 
@@ -60,17 +62,29 @@ public class Frame extends JFrame{
         port.add(new JLabel("Porta"));
         port.add(porta);
 
+        // Connessione -
         nord = new JPanel(new FlowLayout());
         nord.add(address);
         nord.add(port);
         nord.add(connect);
         nord.add(disconnect);
-        
+
+        // VM -
         pannelloSud = new JPanel(new BorderLayout());
         pannelloSud.add(new JLabel("VM"), BorderLayout.NORTH);
-        Vm1 = new JRadioButton("Vm1");
-        Vm2 = new JRadioButton("Vm2");
-        Vm3 = new JRadioButton("Vm3");
+        Vm1 = new JRadioButton("vm1");
+        Vm1.setActionCommand("vm1");
+        Vm2 = new JRadioButton("vm2");
+        Vm2.setActionCommand("vm2");
+        Vm3 = new JRadioButton("vm3");
+        Vm3.setActionCommand("vm3");
+
+        bg = new ButtonGroup();
+        bg.add(Vm1);
+        bg.add(Vm2);
+        bg.add(Vm3);
+        Vm1.setSelected(true);
+
         bottoniNord = new JPanel(new FlowLayout());
         bottoniNord.add(Vm1);
         bottoniNord.add(Vm2);
@@ -102,7 +116,8 @@ public class Frame extends JFrame{
         network = new JProgressBar(0, 100);
         statNet.add(new JLabel("NETWORK"));
         statNet.add(network);
-        
+
+        // CENTRO
         central = new JPanel(new BorderLayout());
         central.add(new JLabel("VM Status"), BorderLayout.NORTH);
         pannelloCentro = new JPanel(new GridLayout (4, 1));
@@ -121,8 +136,7 @@ public class Frame extends JFrame{
         this.getContentPane().add(sud, BorderLayout.SOUTH);
         this.getContentPane().add(nord, BorderLayout.NORTH);
 
-
-        ActionListener listener = new Listener(this, cpu, memory, disk, network, ip, porta);
+        ActionListener listener = new Listener(this, start, stop, disconnect, connect, cpu, memory, disk, network, ip, porta, bg);
         connect.setActionCommand(Listener.CONNECT);
         connect.addActionListener(listener);
         disconnect.setActionCommand(Listener.DISCONNECT);
@@ -145,27 +159,12 @@ public class Frame extends JFrame{
                  disconnect.setEnabled(false);
                  stop.setEnabled(true);
                  start.setEnabled(false);
-                 if(Vm1.isSelected()) {
-                 	Vm2.setEnabled(false);
-                	Vm3.setEnabled(false);
-                }
-                else if(Vm2.isSelected()) {
-                	Vm1.setEnabled(false);
-                	Vm3.setEnabled(false);
-                }
-                else if(Vm3.isSelected()){
-                	Vm2.setEnabled(false);
-                	Vm1.setEnabled(false);
-                }
              }
              else {
                  connect.setEnabled(false);
                  stop.setEnabled(false);
                  disconnect.setEnabled(true);
                  start.setEnabled(true);
-                 Vm1.setEnabled(true);
-                 Vm2.setEnabled(true);
-                 Vm3.setEnabled(true);
              }
         }
         else {
@@ -174,9 +173,6 @@ public class Frame extends JFrame{
             disconnect.setEnabled(false);
             stop.setEnabled(false);
             start.setEnabled(false);
-            Vm1.setEnabled(false);
-            Vm2.setEnabled(false);
-            Vm3.setEnabled(false);
         }
     }
 }
